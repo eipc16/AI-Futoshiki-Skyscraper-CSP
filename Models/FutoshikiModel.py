@@ -62,17 +62,17 @@ class FutoshikiModel(Model):
             result = result + str(constraint) + "\n"
         return result
 
-    def print_info(self):
-        print('-----')
-        print('Size: %d' % self.dims)
-        print('Domain: %s' % (self.domain))
-        print('Variables: ')
-        print(self.variables)
-        print('Constraints: ')
+    def get_board(self, constraints=False):
+        outstr = '------\nSize: %d\nDomain: %s\nState:\n%s\n' % (self.dims, self.domain, str(self.variables))
+        if constraints == True:
+            for var in self.variables.flatten():
+                outstr = outstr + 'Variable: %s\n%s' % (var, self.get_var_constraint(var))
 
-        for var in self.variables.flatten():
-            print('Variable: %s' % var)
-            print(self.get_var_constraint(var))
-            var.check()
+        return outstr + '------\n'
 
-        print('-----')
+    def validate(self):
+        for variable in self.variables.flatten():
+            if variable.check() == False:
+                return False
+        return True
+

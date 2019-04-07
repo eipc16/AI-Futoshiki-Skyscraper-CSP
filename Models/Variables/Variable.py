@@ -21,13 +21,12 @@ class Variable:
     def append_constraint(self, constraint):
         self.constraints.append(constraint)
 
-    def check(self):
+    def check(self, debug=False):
         for constraint in self.constraints:
             if constraint.check() == False:
-                print('Constraint %s - FAILED' % str(constraint))
+                if debug:
+                    print('Constraint %s - FAILED' % str(constraint))
                 return False
-            else:
-                print('Constraint %s - SUCCEEDED' % str(constraint))
         return True
 
     def __repr__(self):
