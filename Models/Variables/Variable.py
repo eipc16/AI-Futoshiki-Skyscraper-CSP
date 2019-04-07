@@ -21,7 +21,7 @@ class Variable:
     def append_constraint(self, constraint):
         self.constraints.append(constraint)
 
-    def check(self, debug=False):
+    def check(self, debug=True):
         for constraint in self.constraints:
             if constraint.check() == False:
                 if debug:

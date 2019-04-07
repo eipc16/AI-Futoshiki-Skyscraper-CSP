@@ -40,4 +40,4 @@ class UniqueRow(Constraint):
         self.row = row
     
     def check(self):
-        return np.count_nonzero(self.row == self.var) == 1
+        return self.var == 0 or np.count_nonzero(self.row == self.var) < 2

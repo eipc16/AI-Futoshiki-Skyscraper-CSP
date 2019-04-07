@@ -22,7 +22,9 @@ class FutoshikiModel(Model):
                 for i, row in enumerate(self.content[2: self.dims + 2]):
                     for j, cell in enumerate(str(row).split(';')):
                         cell_value = int(cell)
-                        variable = FutoshikiVariable(cell_value, i, j)
+                        predefined = False if cell_value == 0 else True
+                        print(predefined)
+                        variable = FutoshikiVariable(cell_value, i, j, predefined=predefined)
                         self.variables[i, j] = variable
 
                 #Loading lt, gt constraints
@@ -75,4 +77,6 @@ class FutoshikiModel(Model):
             if variable.check() == False:
                 return False
         return True
-
+    
+    def validate_non_zero(self):
+        return self.validate() and np.count_nonzero(self.variables.flatten() == 0) == 0
