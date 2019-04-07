@@ -1,8 +1,11 @@
 from Models.FutoshikiModel import FutoshikiModel
+from Algorithms.ConstraintSatisfactionProblem import ConstraintSatisfactionProblem
 
 directory = './Data/Test/'
 filename = 'futoshiki_4_0.txt'
 model = FutoshikiModel(directory + filename)
+csp = ConstraintSatisfactionProblem(model)
+csp.print_active()
 print(model.get_board(True))
 print(model.validate())
 print(model.validate_non_zero())

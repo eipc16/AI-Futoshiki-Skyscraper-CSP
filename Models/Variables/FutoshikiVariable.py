@@ -1,8 +1,8 @@
 from Models.Variables.Variable import Variable
 
 class FutoshikiVariable(Variable):
-    def __init__(self, value, row, col, predefined=False):
-        super().__init__(value, predefined)
+    def __init__(self, value, row, col, domain, predefined=False):
+        super().__init__(value, domain, predefined)
         self.row = row
         self.col = col
 

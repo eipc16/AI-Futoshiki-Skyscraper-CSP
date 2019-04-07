@@ -17,14 +17,18 @@ class FutoshikiModel(Model):
                 self.dims = int(self.content[0])
                 self.domain = Domain(list(range(1, self.dims + 1)))
                 self.variables = np.empty((self.dims, self.dims), dtype=FutoshikiVariable)
-
                 #Loading variables
                 for i, row in enumerate(self.content[2: self.dims + 2]):
                     for j, cell in enumerate(str(row).split(';')):
                         cell_value = int(cell)
-                        predefined = False if cell_value == 0 else True
-                        print(predefined)
-                        variable = FutoshikiVariable(cell_value, i, j, predefined=predefined)
+                        predefined = True
+                        domain = []
+                        
+                        if(cell_value == 0):
+                            predefined = False
+                            domain = self.domain.copy()
+
+                        variable = FutoshikiVariable(cell_value, i, j, domain, predefined=predefined)
                         self.variables[i, j] = variable
 
                 #Loading lt, gt constraints
@@ -69,6 +73,7 @@ class FutoshikiModel(Model):
         if constraints == True:
             for var in self.variables.flatten():
                 outstr = outstr + 'Variable: %s\n%s' % (var, self.get_var_constraint(var))
+                outstr = outstr + 'Domain: %s\n' % str(var.domain)
 
         return outstr + '------\n'
 

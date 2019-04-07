@@ -1,9 +1,10 @@
 class Variable:
-    def __init__(self, value, predefined=False):
+    def __init__(self, value, domain, predefined=False):
         self.value = value
         self._prev_value = value
         self.predefined = predefined
         self.constraints = []
+        self.domain = domain
 
     def update(self, value):
         if predefined != True:
