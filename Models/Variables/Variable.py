@@ -15,4 +15,25 @@ class Variable:
         if predefined != True:
             self.value = self._prev_value
         else:
-            print("You can't change this variable (%s)" % str(self))  
+            print("You can't change this variable (%s)" % str(self))
+
+    def __repr__(self):
+        return str(self.value)
+
+    def __eq__(self, x):
+        return self.value == x.value
+
+    def __ne__(self, other):
+        return self.value != other.value
+
+    def __lt__(self, other):
+        return self.value < x.value
+
+    def __le__(self, other):
+        return self.value <= x.value
+
+    def __gt__(self, other):
+        return self.value > x.value
+
+    def __ge__(self, other):
+        return self.value >= x.value

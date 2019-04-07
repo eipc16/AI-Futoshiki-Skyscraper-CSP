@@ -1,4 +1,7 @@
 import numpy as np
+from Models.Variables.FutoshikiVariable import FutoshikiVariable
+from Models.Domains.Domain import Domain
+from Models.CSPModel import Model
 
 class FutoshikiModel(Model):
     def __init__(self, path):
@@ -11,7 +14,7 @@ class FutoshikiModel(Model):
             with open(path) as file:
                 self.content = file.readlines()
                 self.dims = int(self.content[0])
-                self.domain = list(range(1, self.dims + 1))
+                self.domain = Domain(list(range(1, self.dims + 1)))
                 self.variables = np.empty((self.dims, self.dims), dtype=FutoshikiVariable)
 
                 #Loading variables
@@ -50,6 +53,7 @@ class FutoshikiModel(Model):
     def print_info(self):
         print('-----')
         print('Size: %d' % self.dims)
+        print('Domain: %s' % (self.domain))
         print('Variables: ')
         print(self.variables)
         print('Constraints: ')

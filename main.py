@@ -1,4 +1,4 @@
-from Puzzles.Futoshiki.FutoshikiModel import FutoshikiModel
+from Models.FutoshikiModel import FutoshikiModel
 
 directory = './Data/Test/'
 filename = 'futoshiki_test.txt'
