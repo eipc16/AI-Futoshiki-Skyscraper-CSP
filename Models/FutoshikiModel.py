@@ -38,18 +38,18 @@ class FutoshikiModel(Model):
                     higher_row_number, higher_cell_number = ord(higher_value[0]) - 65, int(higher_value[1]) - 1
                     higher_variable = self.variables[higher_row_number, higher_cell_number]
                   
-                    lower_constraint = LowerThan("%s < %s" % (lower_variable.name(), higher_variable.name()), lower_variable, higher_variable)
-                    higher_constraint = GreaterThan("%s > %s" % (higher_variable.name(), lower_variable.name()), higher_variable, lower_variable)
+                    lower_constraint = LowerThan(lower_variable, higher_variable)
+                    higher_constraint = GreaterThan(higher_variable, lower_variable)
                     
                     lower_variable.append_constraint(lower_constraint)
                     higher_variable.append_constraint(higher_constraint)
 
                 #Setting unique variables
-                for i in self.variables.shape[0]:
-                    for j in self.variables.shape[1]:
+                for i in range(self.variables.shape[0]):
+                    for j in range(self.variables.shape[1]):
                         variable = self.variables[i, j]
-                        unique_constraint = UniqueRow("%d not in in [%s]" % (variable.value, str(self.variables[i][:].flatten())), self.variable, self.variables[i][:].flatten())
-                        unique_constraint_2 = UniqueRow("%d not in in [%s]" % (variable.value, str(self.variables[:][j].flatten())), self.variable, self.variables[:][j].flatten())
+                        unique_constraint = UniqueRow(variable, self.variables[i][:].flatten())
+                        unique_constraint_2 = UniqueRow(variable, self.variables[:][j].flatten())
                         variable.append_constraint(unique_constraint)
                         variable.append_constraint(unique_constraint_2)
 
@@ -59,7 +59,7 @@ class FutoshikiModel(Model):
     def get_var_constraint(self, var):
         result = ""
         for constraint in var.constraints:
-            result = result + constraint + "\n"
+            result = result + str(constraint) + "\n"
         return result
 
     def print_info(self):
@@ -70,8 +70,9 @@ class FutoshikiModel(Model):
         print(self.variables)
         print('Constraints: ')
 
-        for var in self.variables:
+        for var in self.variables.flatten():
             print('Variable: %s' % var)
-            print(get_var_constraint(var))
+            print(self.get_var_constraint(var))
+            var.check()
 
         print('-----')

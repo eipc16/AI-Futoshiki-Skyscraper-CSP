@@ -21,23 +21,38 @@ class Variable:
     def append_constraint(self, constraint):
         self.constraints.append(constraint)
 
+    def check(self):
+        for constraint in self.constraints:
+            if constraint.check() == False:
+                print('Constraint %s - FAILED' % str(constraint))
+                return False
+            else:
+                print('Constraint %s - SUCCEEDED' % str(constraint))
+        return True
+
     def __repr__(self):
         return str(self.value)
 
     def __eq__(self, x):
-        return self.value == x.value
+        x = x.value if isinstance(x, Variable) else x
+        return self.value == x
 
-    def __ne__(self, other):
-        return self.value != other.value
+    def __ne__(self, x):
+        x = x.value if isinstance(x, Variable) else x
+        return self.value != x
 
-    def __lt__(self, other):
-        return self.value < x.value
+    def __lt__(self, x):
+        x = x.value if isinstance(x, Variable) else x
+        return self.value < x
 
-    def __le__(self, other):
-        return self.value <= x.value
+    def __le__(self, x):
+        x = x.value if isinstance(x, Variable) else x
+        return self.value <= x
 
-    def __gt__(self, other):
-        return self.value > x.value
+    def __gt__(self, x):
+        x = x.value if isinstance(x, Variable) else x
+        return self.value > x
 
-    def __ge__(self, other):
-        return self.value >= x.value
+    def __ge__(self, x):
+        x = x.value if isinstance(x, Variable) else x
+        return self.value >= x
