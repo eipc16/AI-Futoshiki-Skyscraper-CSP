@@ -2,7 +2,7 @@ import numpy as np
 from Models.Variables.FutoshikiVariable import FutoshikiVariable
 from Models.Domains.Domain import Domain
 from Models.Constraints.Constraints import LowerThan, GreaterThan, UniqueRow
-from Models.CSPModel import Model
+from Models.ConstraintSatisfactionProblemModel import Model
 
 class FutoshikiModel(Model):
     def __init__(self, path):
