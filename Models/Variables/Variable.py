@@ -3,6 +3,7 @@ class Variable:
         self.value = value
         self._prev_value = value
         self.predefined = predefined
+        self.constraints = []
 
     def update(self, value):
         if predefined != True:
@@ -16,6 +17,9 @@ class Variable:
             self.value = self._prev_value
         else:
             print("You can't change this variable (%s)" % str(self))
+
+    def append_constraint(self, constraint):
+        self.constraints.append(constraint)
 
     def __repr__(self):
         return str(self.value)

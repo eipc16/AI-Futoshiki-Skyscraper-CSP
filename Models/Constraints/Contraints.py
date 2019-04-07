@@ -1,4 +1,5 @@
 from abc import ABC
+import numpy as np
 
 class Constriant(ABC):
     def __init__(self, name):
@@ -8,5 +9,36 @@ class Constriant(ABC):
         return str(self.name)
 
     @abstractmethod
-    def check():
+    def check(self):
         return
+
+def GreaterThan(Constraint):
+    def __init__(self, name, var1, var2):
+        super().__init__(name)
+        self.var1 = var1
+        self.var2 = var2
+
+    def check(self):
+        if self.var1 == 0 or self.var2 == 0
+            return True
+        return self.var1.value > self.var2.value
+
+def LessThan(Constraint):
+    def __init__(self, name, var1, var2):
+        super().__init__(name)
+        self.var1 = var1
+        self.var2 = var2
+
+    def check(self):
+        if self.var1 == 0 or self.var2 == 0
+            return True
+        return self.var1.value < self.var2.value
+
+def UniqueRow(Constraint):
+    def __init__(self, name, var, row):
+        super().__init__(name)
+        self.var = var
+        self.row = row
+    
+    def check(self):
+        return np.count_nonzero(self.row == self.var) == 1

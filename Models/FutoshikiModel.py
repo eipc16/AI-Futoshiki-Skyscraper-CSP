@@ -1,6 +1,7 @@
 import numpy as np
 from Models.Variables.FutoshikiVariable import FutoshikiVariable
 from Models.Domains.Domain import Domain
+from Models.Constraints.Constraints import LowerThan, GreaterThan, UniqueRow
 from Models.CSPModel import Model
 
 class FutoshikiModel(Model):
@@ -24,7 +25,7 @@ class FutoshikiModel(Model):
                         variable = FutoshikiVariable(cell_value, i, j)
                         self.variables[i, j] = variable
 
-                #Loading constraints
+                #Loading lt, gt constraints
                 for i, row in enumerate(self.content[self.dims + 3:]):
                     if row == "\n":
                         break;
@@ -36,19 +37,30 @@ class FutoshikiModel(Model):
 
                     higher_row_number, higher_cell_number = ord(higher_value[0]) - 65, int(higher_value[1]) - 1
                     higher_variable = self.variables[higher_row_number, higher_cell_number]
+                  
+                    lower_constraint = LowerThan("%s < %s" % (lower_variable.name(), higher_variable.name()), lower_variable, higher_variable)
+                    higher_constraint = GreaterThan("%s > %s" % (higher_variable.name(), lower_variable.name()), higher_variable, lower_variable)
                     
-                    _is_lower = self.is_lower(lower_variable, higher_variable)
+                    lower_variable.append_constraint(lower_constraint)
+                    higher_variable.append_constraint(higher_constraint)
 
-                    self.append_constraint(lower_variable.name(), {"var": higher_variable.name(), "value": _is_lower})
-                    self.append_constraint(higher_variable.name(), {"var": lower_variable.name(), "value": not _is_lower})
+                #Setting unique variables
+                for i in self.variables.shape[0]:
+                    for j in self.variables.shape[1]:
+                        variable = self.variables[i, j]
+                        unique_constraint = UniqueRow("%d not in in [%s]" % (variable.value, str(self.variables[i][:].flatten())), self.variable, self.variables[i][:].flatten())
+                        unique_constraint_2 = UniqueRow("%d not in in [%s]" % (variable.value, str(self.variables[:][j].flatten())), self.variable, self.variables[:][j].flatten())
+                        variable.append_constraint(unique_constraint)
+                        variable.append_constraint(unique_constraint_2)
+
         else:
             print("Incorrect file!")
-        
-    def is_lower(self, x, y):
-        return y.value == self.default_value or x.value > y.value
 
-    def is_unique(self, x, array):
-        return np.count_nonzero(array == x) == 1
+    def get_var_constraint(self, var):
+        result = ""
+        for constraint in var.constraints:
+            result = result + constraint + "\n"
+        return result
 
     def print_info(self):
         print('-----')
@@ -57,16 +69,9 @@ class FutoshikiModel(Model):
         print('Variables: ')
         print(self.variables)
         print('Constraints: ')
-        print(self.constraints)
+
+        for var in self.variables:
+            print('Variable: %s' % var)
+            print(get_var_constraint(var))
+
         print('-----')
-
-    def check_unique(self):
-        for row in self.variables:
-            print(row)
-            for val in row:
-                print("%s%s" % (val, self.is_unique(val, row)))
-
-        for col in self.variables.T:
-            print(col)
-            for val in col:
-                print("%s%s" % (val, self.is_unique(val, col)))

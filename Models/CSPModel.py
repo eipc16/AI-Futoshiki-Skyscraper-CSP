@@ -1,9 +1,8 @@
-
 class Model:
     def __init__(self, default_value=0):
         self.default_value = default_value
         self.variables = []
-        self.domain = []
+        self.domain = None
         self.constraints = dict()
 
     def validate(self, variable):
