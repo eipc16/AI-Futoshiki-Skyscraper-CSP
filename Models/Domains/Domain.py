@@ -1,4 +1,6 @@
-class Domain:
+from collections import Iterator
+
+class Domain(Iterator):
     def __init__(self, domain):
         self.domain = domain
 
@@ -16,3 +18,8 @@ class Domain:
 
     def copy(self):
         return Domain([i for i in self.domain])
+
+    def next(self):
+        if not self.data:
+            raise StopIteration
+        return self.data.pop()
