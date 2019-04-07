@@ -11,5 +11,7 @@ class ConstraintSatisfactionProblem:
         self.iterations = 0
 
     def print_active(self):
+        print('not predefined vars')
         for var in self.active_variables:
             print(var.name())
+        print('end not predefined vars')

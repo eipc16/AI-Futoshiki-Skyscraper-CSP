@@ -15,5 +15,4 @@ class Domain:
         self.domain.append(value)
 
     def copy(self):
-        print('elo kopiary: %s -> %s' % (str(self.domain), str([i for i in self.domain])))
-        return [i for i in self.domain]
+        return Domain([i for i in self.domain])
