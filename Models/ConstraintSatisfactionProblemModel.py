@@ -6,6 +6,7 @@ class Model:
         self.constraints = dict()
 
     def validate(self, variable):
+        print('elooo')
         for constraint in self.constrains.get(variable, []):
             if not constraint():
                 return False

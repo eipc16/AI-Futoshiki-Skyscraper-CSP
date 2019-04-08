@@ -1,4 +1,5 @@
 from collections import Sequence
+import random as r
 
 class Domain(Sequence):
     def __init__(self, domain):
@@ -24,3 +25,7 @@ class Domain(Sequence):
 
     def __len__(self):
         return len(self.domain)
+
+    def shuffled(self):
+        r.shuffle(self.domain)
+        return self.domain

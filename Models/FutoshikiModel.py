@@ -1,7 +1,7 @@
 import numpy as np
 from Models.Variables.FutoshikiVariable import FutoshikiVariable
 from Models.Domains.Domain import Domain
-from Models.Constraints.Constraints import LowerThan, GreaterThan, UniqueRow
+from Models.Constraints.Constraints import LowerThan, GreaterThan, Unique
 from Models.ConstraintSatisfactionProblemModel import Model
 
 class FutoshikiModel(Model):
@@ -16,7 +16,7 @@ class FutoshikiModel(Model):
                 self.content = file.readlines()
                 self.dims = int(self.content[0])
                 self.domain = Domain(list(range(1, self.dims + 1)))
-                self.variables = np.empty((self.dims, self.dims), dtype=FutoshikiVariable)
+                self.variables = np.empty((self.dims, self.dims), dtype=FutoshikiModel)
                 #Loading variables
                 for i, row in enumerate(self.content[2: self.dims + 2]):
                     for j, cell in enumerate(str(row).split(';')):
@@ -34,7 +34,7 @@ class FutoshikiModel(Model):
                 #Loading lt, gt constraints
                 for i, row in enumerate(self.content[self.dims + 3:]):
                     if row == "\n":
-                        break;
+                        break
 
                     lower_value, higher_value = row.split(';')
 
@@ -43,45 +43,35 @@ class FutoshikiModel(Model):
 
                     higher_row_number, higher_cell_number = ord(higher_value[0]) - 65, int(higher_value[1]) - 1
                     higher_variable = self.variables[higher_row_number, higher_cell_number]
-                  
+
                     lower_constraint = LowerThan(lower_variable, higher_variable)
                     higher_constraint = GreaterThan(higher_variable, lower_variable)
-                    
+
                     lower_variable.append_constraint(lower_constraint)
+                    lower_variable.append_constrained_variable(higher_variable)
                     higher_variable.append_constraint(higher_constraint)
+                    higher_variable.append_constrained_variable(lower_variable)
 
                 #Setting unique variables
                 for i in range(self.variables.shape[0]):
                     for j in range(self.variables.shape[1]):
                         variable = self.variables[i, j]
-                        unique_constraint = UniqueRow(variable, self.variables[i][:].flatten())
-                        unique_constraint_2 = UniqueRow(variable, self.variables[:][j].flatten())
+                        cons_row = self.variables[i,:]
+                        col_row = self.variables[:,j]
+                        row = np.concatenate([cons_row, col_row])
+
+                        unique_constraint = Unique(variable, cons_row)
+                        unique_constraint_2 = Unique(variable, col_row)
+
                         variable.append_constraint(unique_constraint)
                         variable.append_constraint(unique_constraint_2)
+                        variable.append_constrained_variable(row)
 
         else:
             print("Incorrect file!")
 
-    def get_var_constraint(self, var):
-        result = ""
-        for constraint in var.constraints:
-            result = result + str(constraint) + "\n"
-        return result
-
-    def get_board(self, constraints=False):
-        outstr = '------\nSize: %d\nDomain: %s\nState:\n%s\n' % (self.dims, self.domain, str(self.variables))
-        if constraints == True:
-            for var in self.variables.flatten():
-                outstr = outstr + 'Variable: %s\n%s' % (var, self.get_var_constraint(var))
-                outstr = outstr + 'Domain: %s\n' % str(var.domain)
-
-        return outstr + '------\n'
-
     def validate(self):
-        for variable in self.variables.flatten():
-            if variable.check() == False:
-                return False
-        return True
+        return np.prod([x.check() for x in self.variables.ravel()])
     
     def validate_non_zero(self):
         return self.validate() and np.count_nonzero(self.variables.flatten() == 0) == 0

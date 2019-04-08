@@ -1,5 +1,6 @@
 from Models.Variables.Variable import Variable
 
+
 class FutoshikiVariable(Variable):
     def __init__(self, value, row, col, domain, predefined=False):
         super().__init__(value, domain, predefined)
@@ -17,3 +18,7 @@ class FutoshikiVariable(Variable):
 
     def __str__(self):
         return "[%s x %s] Value = %d" % (self.row_char(), self.column(), self.value) 
+
+    def __hash__(self):
+        return hash(self.name())
+

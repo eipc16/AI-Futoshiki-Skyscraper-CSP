@@ -1,0 +1,75 @@
+import numpy as np
+import time
+from multiprocessing import Pool
+
+class ConstraintSatisfactionProblem:
+    def __init__(self, model, defvalue=0):
+        self.model = model
+        self.defvalue = defvalue
+        self.variables = model.variables
+        # self.active_variables = self.variables.ravel()
+        self.active_variables = np.extract(model.variables == defvalue, self.variables)
+        self.domain = model.domain
+
+        self.timer = 0.0
+        self.iterations = 0
+
+        self.solutions = 0
+
+    def validate(self, var):
+        ''' for implementation in child classes '''
+        pass
+
+    def solve(self, index):
+        if index == len(self.active_variables):
+            return True
+        
+        self.iterations += 1
+        var = self.active_variables[index]
+        for value in self.domain:
+            var.update(value)
+
+            if self.validate(var) and self.solve(index + 1):
+                if not np.any(self.variables == 0):
+                    print('Found solution')
+                    self.solutions += 1
+                    print(self.get_info())
+                    print(self.get_board())
+
+
+                #return True
+
+        var.update(0)
+
+        #print(self.get_board())
+
+        return False            
+
+    def run(self):
+        self.timer = time.time()
+        self.solve(0)
+        #self.timer = time.time() - start_time
+
+    def get_info(self):
+        return "Elapsed time: %5.2f | Iterations: %5d | Solutions: %5d" % (time.time() - self.timer, self.iterations, self.solutions)
+    
+    def get_var_constraint(self, var):
+        result = ""
+        for constraint in var.constraints:
+            result = result + str(constraint) + "\n"
+        return result
+        
+    def get_board(self, constraints=False):
+        outstr = '------\nDomain: %s\nState:\n%s\n' % (self.domain, str(self.variables))
+        if constraints:
+            for var in self.variables.flatten():
+                outstr = outstr + 'Variable: %s\n%s' % (var, self.get_var_constraint(var))
+                outstr = outstr + 'Domain: %s\n' % str(var.domain)
+
+        return outstr + '------\n'
+
+    def print_active(self):
+        print('not predefined vars')
+        for var in self.active_variables:
+            print(var.name())
+        print('end not predefined vars')
