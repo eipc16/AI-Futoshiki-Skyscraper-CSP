@@ -2,8 +2,16 @@ language: python
 python:
  - "3.5"
  - "3.6"
- - "3.7"
 install:
  - pip install -r requirements.txt
 script:
+ - python main.py fc ./Data/Research/test_sky_5_0.txt
+ - python main.py fc ./Data/Research/test_sky_5_1.txt
+ - python main.py fc ./Data/Research/test_sky_5_2.txt
+ - python main.py fc ./Data/Research/test_sky_5_3.txt
+ - python main.py fc ./Data/Research/test_sky_5_4.txt
+ - python main.py fc ./Data/Research/test_sky_5_2.txt
  - python main.py fc ./Data/Research/test_sky_6_0.txt
+ - python main.py fc ./Data/Research/test_futo_7_0.txt
+ - python main.py fc ./Data/Research/test_futo_8_0.txt
+ - python main.py fc ./Data/Research/test_futo_8_1.txt

@@ -38,7 +38,7 @@ class ConstraintSatisfactionProblem:
                     self.solutions += 1
                     print(self.get_info())
                     print(self.model.get_board())
-                    # return True
+                    return True
 
                 #return True
 
