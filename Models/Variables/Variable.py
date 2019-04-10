@@ -40,7 +40,7 @@ class Variable:
     def check_count(self):
         failed = 0
         for constraint in self.constraints:
-            if consraint.check() == False:
+            if constraint.check() == False:
                 failed += 1
         return failed
 
@@ -54,7 +54,7 @@ class Variable:
             else:
                 constrained_vars.update(constrained)
 
-            #constrained_vars.update(constraint.get_constrained())
+            constrained_vars.update(constraint.get_constrained())
         return constrained_vars
 
     def __repr__(self):

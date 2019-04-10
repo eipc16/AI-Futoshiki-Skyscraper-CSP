@@ -1,16 +1,11 @@
 class Model:
-    def __init__(self, default_value=0):
-        self.default_value = default_value
+    def __init__(self):
         self.variables = []
         self.domain = None
-        self.constraints = dict()
+        self.model_constraints = []
 
-    def validate(self, variable):
-        print('elooo')
-        for constraint in self.constrains.get(variable, []):
-            if not constraint():
-                return False
-        return True
+    def validate(self):
+        pass
 
-    def append_constraint(self, variable, constraint):
-        self.constraints.update({variable: constraint})
+    def get_board(self):
+        pass
