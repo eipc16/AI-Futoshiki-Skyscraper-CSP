@@ -16,7 +16,7 @@ class FutoshikiModel(Model):
                 self.content = file.readlines()
                 self.dims = int(self.content[0])
                 self.domain = Domain(list(range(1, self.dims + 1)))
-                self.variables = np.empty((self.dims, self.dims), dtype=FutoshikiModel)
+                self.variables = np.empty((self.dims, self.dims), dtype=FutoshikiVariable)
                 #Loading variables
                 for i, row in enumerate(self.content[2: self.dims + 2]):
                     for j, cell in enumerate(str(row).split(';')):
@@ -28,7 +28,7 @@ class FutoshikiModel(Model):
                             predefined = False
                             domain = self.domain.copy()
 
-                        variable = FutoshikiVariable(cell_value, i, j, domain, predefined=predefined)
+                        variable = FutoshikiVariable(cell_value, i, j, Domain(list(range(1, self.dims + 1))), predefined=predefined)
                         self.variables[i, j] = variable
 
                 #Loading lt, gt constraints
@@ -75,3 +75,13 @@ class FutoshikiModel(Model):
     
     def validate_non_zero(self):
         return self.validate() and np.count_nonzero(self.variables.flatten() == 0) == 0
+
+    def get_board(self):
+        outstr = '------\nDomain: %s\nState:' % self.domain
+        middle = ''
+
+        for i in range(self.variables.shape[0]):
+            for j in range(self.variables.shape[1]):
+                middle += '%d\t' % self.variables[i, j].value
+            middle += '\n'
+        return '%s\n%s' % (outstr, middle)
