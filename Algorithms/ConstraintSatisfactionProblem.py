@@ -1,13 +1,13 @@
 import numpy as np
 import time
+import asyncio
 
 class ConstraintSatisfactionProblem:
-    def __init__(self, model, defvalue=0):
+    def __init__(self, model):
         self.model = model
-        self.defvalue = defvalue
         self.variables = model.variables
         # self.active_variables = self.variables.ravel()
-        self.active_variables = np.extract(model.variables == defvalue, self.variables)
+        self.active_variables = np.extract(model.variables == 0, self.variables)
         self.domain = model.domain
 
         self.timer = 0.0
@@ -25,7 +25,7 @@ class ConstraintSatisfactionProblem:
 
         self.iterations += 1
 
-        if self.iterations % 10000 == 0:
+        if self.iterations % 100000 == 0:
             print('Yay i\'m on %d iterations' % self.iterations)
 
         var = self.active_variables[index]
@@ -34,13 +34,14 @@ class ConstraintSatisfactionProblem:
             var.update(value)
 
             if self.validate(var) and self.solve(index + 1):
-                if index == len(self.active_variables) - 1:
+                if self.model.validate():
                     print('Found solution')
                     self.solutions += 1
                     print(self.get_info())
-                    print(self.get_board())
+                    print(self.model.get_board())
+                    # return True
 
-                return True
+                #return True
 
         var.update(0)
 
@@ -49,29 +50,20 @@ class ConstraintSatisfactionProblem:
     def run(self):
         self.timer = time.time()
         self.solutions = 0
+        self.model.get_board()
         self.solve(0)
 
     def get_info(self):
         return "Elapsed time: %5.2f | Iterations: %5d | Solutions: %5d" % (time.time() - self.timer, self.iterations, self.solutions)
 
+    @staticmethod
     def get_var_constraint(self, var):
         result = ""
         for constraint in var.constraints:
             result = result + str(constraint) + "\n"
         return result
 
-    def get_board(self, constraints=False):
-        outstr = '------\n'
-        if True:
-            outstr += 'Domain: %s\nState:\n%s\n' % (self.domain, str(self.variables))
-            if constraints:
-                for var in self.variables.flatten():
-                    outstr = outstr + 'Variable: %s\n%s' % (var, self.get_var_constraint(var))
-                    outstr = outstr + 'Domain: %s\n' % str(var.domain)
-        else:
-            outstr += 'No solutions\n'
-        return outstr + '------\n'
-
+    @staticmethod
     def print_active(self):
         print('not predefined vars')
         for var in self.active_variables:
