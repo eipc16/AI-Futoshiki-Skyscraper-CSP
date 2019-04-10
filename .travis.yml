@@ -4,4 +4,4 @@ python:
 install:
  - pip install -r requirements.txt
 script:
- - python main.py fc ./Data/Research/test_futo_8_0.txt
+ - python main.py fc ./Data/Research/test_futo_8_2.txt
