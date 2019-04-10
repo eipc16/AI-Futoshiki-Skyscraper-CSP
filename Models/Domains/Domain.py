@@ -9,13 +9,15 @@ class Domain(Sequence):
         return str(self.domain)
 
     def in_domain(self, value):
-        return domain.contains(value)
+        return self.domain.contains(value)
 
     def remove(self, value):
-        self.domain.remove(value)
+        if value in self.domain:
+            self.domain.remove(value)
 
     def append(self, value):
-        self.domain.append(value)
+        if value not in self.domain:
+            self.domain.append(value)
 
     def copy(self):
         return Domain([i for i in self.domain])
