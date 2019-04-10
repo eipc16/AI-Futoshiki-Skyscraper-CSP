@@ -1,6 +1,5 @@
 import numpy as np
 import time
-import asyncio
 
 class ConstraintSatisfactionProblem:
     def __init__(self, model):
@@ -34,7 +33,7 @@ class ConstraintSatisfactionProblem:
             var.update(value)
 
             if self.validate(var) and self.solve(index + 1):
-                if self.model.validate():
+                if index + 1 == len(self.active_variables) and self.model.validate():
                     print('Found solution')
                     self.solutions += 1
                     print(self.get_info())
