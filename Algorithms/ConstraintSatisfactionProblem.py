@@ -9,6 +9,8 @@ class ConstraintSatisfactionProblem:
         self.active_variables = np.extract(model.variables == 0, self.variables)
         self.domain = model.domain
 
+        print([x.name() for x in self.active_variables])
+
         self.timer = 0.0
         self.iterations = 0
 
@@ -19,10 +21,10 @@ class ConstraintSatisfactionProblem:
         pass
 
     def solve(self, index):
+        self.iterations += 1
+        
         if index == len(self.active_variables):
             return True
-
-        self.iterations += 1
 
         if self.iterations % 100000 == 0:
             print('Yay i\'m on %d iterations' % self.iterations)
@@ -38,9 +40,11 @@ class ConstraintSatisfactionProblem:
                     self.solutions += 1
                     print(self.get_info())
                     print(self.model.get_board())
+                    var.update(0)
                     return True
-
-                #return True
+                elif index + 1 == len(self.active_variables):
+                    var.update(0)
+                    return False
 
         var.update(0)
 

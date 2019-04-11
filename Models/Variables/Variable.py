@@ -32,7 +32,7 @@ class Variable:
     def check(self, debug=False):
         for constraint in self.constraints:
             if not constraint.check():
-                if debug:
+                if self.name() == "A3" and self.value == 4:
                     print('Constraint %s - FAILED' % str(constraint))
                 return False
         return True
