@@ -9,8 +9,6 @@ class ConstraintSatisfactionProblem:
         self.active_variables = np.extract(model.variables == 0, self.variables)
         self.domain = model.domain
 
-        print([x.name() for x in self.active_variables])
-
         self.timer = 0.0
         self.iterations = 0
 
@@ -42,9 +40,6 @@ class ConstraintSatisfactionProblem:
                     print(self.model.get_board())
                     var.update(0)
                     return True
-                elif index + 1 == len(self.active_variables):
-                    var.update(0)
-                    return False
 
         var.update(0)
 
@@ -54,6 +49,8 @@ class ConstraintSatisfactionProblem:
         self.timer = time.time()
         self.solutions = 0
         self.model.get_board()
+        self.active_variables = sorted(self.active_variables, key=lambda x: x.constrained_by, reverse=True)
+        #print([x.name() + "(cons: %d)" % x.constrained_by for x in self.active_variables])
         self.solve(0)
 
     def get_info(self):

@@ -7,6 +7,8 @@ class Variable:
         self.constrained_variables = set()
         self.domain = domain
 
+        self.constrained_by = 0
+
     def update(self, value):
         if self.predefined != True:
             self._prev_value = self.value
@@ -32,7 +34,7 @@ class Variable:
     def check(self, debug=False):
         for constraint in self.constraints:
             if not constraint.check():
-                if self.name() == "A3" and self.value == 4:
+                if debug:
                     print('Constraint %s - FAILED' % str(constraint))
                 return False
         return True

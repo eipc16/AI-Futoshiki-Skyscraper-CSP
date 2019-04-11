@@ -46,6 +46,9 @@ class FutoshikiModel(Model):
 
                     lower_constraint = LowerThan(lower_variable, higher_variable)
                     higher_constraint = GreaterThan(higher_variable, lower_variable)
+                    
+                    lower_variable.constrained_by += 1
+                    higher_variable.constrained_by += 1
 
                     lower_variable.append_constraint(lower_constraint)
                     lower_variable.append_constrained_variable(higher_variable)
@@ -62,6 +65,8 @@ class FutoshikiModel(Model):
 
                         unique_constraint = Unique(variable, cons_row)
                         unique_constraint_2 = Unique(variable, col_row)
+
+                        variable.constrained_by += (cons_row.shape[0] + col_row.shape[0] - 2)
 
                         variable.append_constraint(unique_constraint)
                         variable.append_constraint(unique_constraint_2)
